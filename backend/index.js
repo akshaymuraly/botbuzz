@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const ngrok = require("@ngrok/ngrok");
 require("dotenv").config();
 const { dbConnection } = require("./utils/MongooseConnection");
+const ErrorHandler = require("./utils/ErrorHandler");
 
 app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
@@ -15,11 +16,17 @@ dbConnection();
 
 // ----------Router------------------------
 
-const botRoutes = require("./modules/user/routes/bot.route");
+const botRouter = require("./modules/user/routes/bot.route");
+const userRouter = require("./modules/user/routes/user.route");
 
 // ----------Routes------------------------
 
-app.use("/api", botRoutes);
+app.use("/api/bot", botRouter);
+app.use("/api/user", userRouter);
+
+// ----------ERROR HANDLER MIDDLEWARE-----------
+
+app.use(ErrorHandler);
 
 // ----------Server listening--------
 
